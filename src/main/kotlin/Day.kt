@@ -1,0 +1,5 @@
+interface Day {
+
+    fun run()
+
+}
