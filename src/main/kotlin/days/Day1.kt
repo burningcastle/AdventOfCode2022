@@ -6,18 +6,15 @@ import java.io.File
 class Day1 : Day {
 
     override fun run() {
-//        val lines = File("src/main/resources/Day1.example.txt").readLines()
-        val lines = File("src/main/resources/Day1.txt").readLines()
+        val paragraphs = File("src/main/resources/Day1.txt").readText().split("\r\n\r\n", "\n\n", "\r\r")
+        val sums = paragraphs.map { paragraph -> paragraph.lines().sumOf { it.toInt() } }
+        val sortedSums = sums.sortedDescending()
 
         // Part 1
-        println("Part 1: " + calcSomething(lines))
+        println("Part 1: " + sortedSums.first()) // 71934
 
         // Part 2
-        println("Part 2: " + calcSomething(lines))
-    }
-
-    private fun calcSomething(lines: List<String>): Int {
-        return 0
+        println("Part 2: " + sortedSums.take(3).sum()) // 211447
     }
 
 }
