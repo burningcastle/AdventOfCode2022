@@ -7,43 +7,20 @@ class Day4 : Day {
 
     override fun run() {
         val lines = File("src/main/resources/Day4.txt").readLines()
-        val assignmentPairs = lines.map {
-            val res = it.split(",", "-")
+        val assignmentPairs = lines.map { line ->
+            val bounds = line.split(",", "-").map { it.toInt() }
             Pair(
-                Range(lowerBound = res[0].toInt(), upperBound = res[1].toInt()),
-                Range(lowerBound = res[2].toInt(), upperBound = res[3].toInt())
+                (bounds[0]..bounds[1]).toList(),
+                (bounds[2]..bounds[3]).toList()
             )
         }
 
-        // order the ranges in each pair:
-        // first range = larger
-        // second range = smaller
-        val orderedAssignmentPairs = assignmentPairs.map { pair ->
-            if (pair.first.upperBound - pair.first.lowerBound < pair.second.upperBound - pair.second.lowerBound) {
-                pair.second to pair.first
-            } else {
-                pair
-            }
-        }
-
         // Part 1
-        println("Part 1: " + orderedAssignmentPairs.map { largerFullyContainsSmaller(it) }.count { it }) // 515
+        println("Part 1: " + assignmentPairs.count { it.first.containsAll(it.second) || it.second.containsAll(it.first) }) // 515
 
         // Part 2
-        println("Part 2: " + orderedAssignmentPairs.map { rangesOverlap(it) }.count { it }) // 883
+        println("Part 2: " + assignmentPairs.count { it.first.intersect(it.second).isNotEmpty() }) // 883
     }
-
-    private fun largerFullyContainsSmaller(ranges: Pair<Range, Range>): Boolean {
-        return ranges.first.upperBound >= ranges.second.upperBound &&
-                ranges.first.lowerBound <= ranges.second.lowerBound
-    }
-
-    private fun rangesOverlap(ranges: Pair<Range, Range>): Boolean {
-        return ranges.second.lowerBound in ranges.first.lowerBound..ranges.first.upperBound ||
-                ranges.second.upperBound in ranges.first.lowerBound..ranges.first.upperBound
-    }
-
-    private data class Range(val lowerBound: Int, val upperBound: Int)
 
 }
 
