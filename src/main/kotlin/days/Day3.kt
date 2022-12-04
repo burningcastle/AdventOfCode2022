@@ -6,20 +6,19 @@ import java.io.File
 class Day3 : Day {
 
     override fun run() {
-        val lines = File("src/main/resources/Day3.txt").readLines()
-        val rucksacks = lines.map { it.toList() }
+        val rucksacks = File("src/main/resources/Day3.txt").readLines()
 
         // Part 1
         val wrongItems = rucksacks.flatMap {
-            val compartments = it.chunked(it.size / 2)
-            compartments[0].intersect(compartments[1])
+            val compartments = it.chunked(it.length / 2)
+            getCommonChars(compartments)
         }
         println("Part 1: " + wrongItems.sumOf { getItemTypePriority(it) }) // 7845
 
         // Part 2
-        val rucksackTriplets = rucksacks.map { it.toSet() }.chunked(3)
+        val rucksackTriplets = rucksacks.chunked(3)
         val badges = rucksackTriplets.flatMap {
-            it.reduce { acc, rucksack -> acc.intersect(rucksack) }
+            getCommonChars(it)
         }
         println("Part 2: " + badges.sumOf { getItemTypePriority(it) }) // 2790
     }
@@ -32,6 +31,10 @@ class Day3 : Day {
         } else {
             itemType.code - 38
         }
+    }
+
+    private fun getCommonChars(strings: List<String>): Set<Char> {
+        return strings.map { it.toSet() }.reduce { acc, chars -> acc.intersect(chars) }
     }
 
 }
