@@ -15,8 +15,8 @@ class Day5 : Day {
             val raw = line.split("move ", " from ", " to ")
             Instruction(
                 amount = raw[1].toInt(),
-                from = raw[2].toInt(),
-                to = raw[3].toInt()
+                from = raw[2].toInt() - 1,
+                to = raw[3].toInt() - 1
             )
         }
 
@@ -26,27 +26,29 @@ class Day5 : Day {
                 .take(instruction.amount)
                 .map { Instruction(1, instruction.from, instruction.to) }
         }
-        val res1 = applyInstructions(stacks, flattenedInstructions)
-        println("Part 1: " + res1.map { it.first() }.joinToString("")) // VJSFHWGFT
+        val stacksPart1 = applyInstructions(stacks, flattenedInstructions)
+        println("Part 1: " + getFirstElementsAsString(stacksPart1)) // VJSFHWGFT
 
         // Part 2
-        val res2 = applyInstructions(stacks, instructions)
-        println("Part 2: " + res2.map { it.first() }.joinToString("")) // LCTQFBVZV
+        val stacksPart2 = applyInstructions(stacks, instructions)
+        println("Part 2: " + getFirstElementsAsString(stacksPart2)) // LCTQFBVZV
     }
+
+    private fun getFirstElementsAsString(lists: List<List<Char>>) = lists.map { it.first() }.joinToString("")
 
     private fun applyInstructions(stacks: List<List<Char>>, instructions: List<Instruction>): List<List<Char>> {
         return instructions.fold(stacks) { acc, instruction -> applyInstruction(acc, instruction) }
     }
 
-    // TODO refactoring !!!
     private fun applyInstruction(stacks: List<List<Char>>, instruction: Instruction): List<List<Char>> {
-        val elementsToBeTransferred = stacks[instruction.from - 1].take(instruction.amount)
-        val mutableStacks = stacks.map { it.toMutableList() }
-        elementsToBeTransferred.reversed().forEach {
-            mutableStacks[instruction.from - 1].removeFirst()
-            mutableStacks[instruction.to - 1].add(0, it)
+        val elementsToBeMoved = stacks[instruction.from].take(instruction.amount)
+        return stacks.mapIndexed { stackIndex, stack ->
+            when (stackIndex) {
+                instruction.from -> stack.drop(elementsToBeMoved.size)
+                instruction.to -> elementsToBeMoved + stack
+                else -> stack
+            }
         }
-        return mutableStacks
     }
 
     private fun <T> transpose(matrix: List<List<T>>): List<List<T>> {

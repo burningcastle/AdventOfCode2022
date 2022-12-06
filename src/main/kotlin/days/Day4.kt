@@ -10,8 +10,8 @@ class Day4 : Day {
         val assignmentPairs = lines.map { line ->
             val bounds = line.split(",", "-").map { it.toInt() }
             Pair(
-                (bounds[0]..bounds[1]).toList(),
-                (bounds[2]..bounds[3]).toList()
+                (bounds[0]..bounds[1]).toSet(),
+                (bounds[2]..bounds[3]).toSet()
             )
         }
 
