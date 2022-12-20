@@ -6,7 +6,6 @@ import kotlin.math.absoluteValue
 
 class Day12 : Day {
 
-
     override fun run() {
         val input = File("src/main/resources/Day12.example.txt").readLines().map { it.toCharArray().toList() }
 //        val input = File("src/main/resources/Day12.txt").readLines().map { it.toCharArray().toList() }
@@ -14,13 +13,13 @@ class Day12 : Day {
         val start = heightMap.getLocationOf('S')
 
         // Part 1
-        val res1 = searchPath(start, heightMap) ?: emptyList()
-        println("Part 1: " + (res1.size - 1)) // 447
+        val shortestPath = searchPath(start, heightMap) ?: emptyList()
+        println("Part 1: " + (shortestPath.size - 1)) // 447
 
         // Part 2
         val allAFields = heightMap.map.flatten().filter { it.height == 'a' || it.height == 'S' }
-        val res2 = allAFields.mapNotNull { searchPath(it, heightMap) }
-        println("Part 2: " + res2.map { it.size - 1 }.min()) // 446 // 336293ms
+        val allPaths = allAFields.mapNotNull { searchPath(it, heightMap) }
+        println("Part 2: " + allPaths.minOfOrNull { it.size - 1 }) // 446 // ~5.5minutes
     }
 
     private fun searchPath(start: Location, map: HeightMap): List<Location>? {
